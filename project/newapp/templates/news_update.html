@@ -1,0 +1,11 @@
+{% extends 'flatpages/default.html' %}
+
+{% block content %}
+<h1>Updating news or article</h1>
+<hr>
+<form action="" method="post"> <!-- для передачи информации, кот. изменяет состояние бд method="post -->
+    {% csrf_token %} <!-- #защита от хакеров -->
+    {{ form.as_p }}
+    <input type="submit" value="Save" />
+</form>
+{% endblock content %}

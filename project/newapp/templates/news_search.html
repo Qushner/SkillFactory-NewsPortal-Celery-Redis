@@ -1,0 +1,73 @@
+{% extends 'flatpages/default.html' %}
+{% load custom_filters %}
+
+{% block title %}
+Current news
+{% endblock title %}
+
+<!-- В контенте на странице мы выводим все новости -->
+{% block content %}
+<h1>Current news:</h1>
+<h3>There is {{news_search|length}} news:</h3>
+
+{# Добавляем форму, которая объединяет набор полей, которые будут отправляться в запросе #}
+   <form action="" method="get">
+       {# Переменная, которую мы передали через контекст, может сгенерировать нам форму с полями #}
+       {{ filterset.form.as_p }}
+       {# Добавим кнопку отправки данных формы #}
+       <input type="submit" value="Найти" />
+   </form>
+
+{% if news_search %}
+
+    <table width="50%"> <!-- Начинаем описывать таблицу , ширина таблицы = 50%-->
+        <tr> <!-- Добавляем строку -->
+            <td> <b>Title </b> </td> <!-- Добавляем ячейку в строку <b> - выделяем жирным-->
+            <td> <b>Date creation</b> </td>
+            <td> <b>Text</b> </td>
+        </tr> <!-- Не забываем закрыть HTML-тег строки -->
+        <!-- Для каждого товара будете генерироваться новая строчка,
+           т.е. новый HTML код, который указан в теле цикла.
+           При этом сам цикл работает точно так же, как и в Python.
+           news_list — переменная цикла, т.е. наша новость полученная из списка -->
+           {% for one_news in news_search %} <!-- данные из views -->
+           <tr>
+               <!-- Не забываем, что переменные в шаблоне ничем не отличаются
+                от переменных в Python. Здесь также можно получать доступ к
+                полям объекта модели. Например, здесь мы выводим имя,
+                в следующем столбце описание, и т.д.  -->
+               <td>{{ one_news.title|censor }}</td>
+               <td>{{ one_news.dateCreation|date:"d M Y"}}</td>
+               <td>{{ one_news.text|truncatechars:20|censor}}</td>
+           </tr>
+           {% endfor %}
+    </table> <!-- ... и таблицы -->
+
+{% else %}
+       <!-- Если новостей нет, то говорим, что новостей нет -->
+       <h2>No current news!</h2>
+{% endif %}
+
+{# Добавляем пагинацию на страницу #}
+   {# Информация о предыдущих страницах #}
+   {% if page_obj.has_previous %}
+       <a href="?page=1">1</a>
+       {% if page_obj.previous_page_number != 1 %}
+           ...
+           <a href="?page={{ page_obj.previous_page_number }}">{{ page_obj.previous_page_number }}</a>
+       {% endif %}
+   {% endif %}
+
+   {# Информация о текущей странице #}
+   {{ page_obj.number }}
+
+   {# Информация о следующих страницах #}
+   {% if page_obj.has_next %}
+       <a href="?page={{ page_obj.next_page_number }}">{{ page_obj.next_page_number }}</a>
+       {% if paginator.num_pages != page_obj.next_page_number %}
+           ...
+           <a href="?page={{ page_obj.paginator.num_pages }}">{{ page_obj.paginator.num_pages }}</a>
+       {% endif %}
+   {% endif %}
+
+{% endblock content%}
