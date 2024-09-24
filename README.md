@@ -1,0 +1,2 @@
+# SkillFactory-NewsPortal-Celery-Redis
+ 
