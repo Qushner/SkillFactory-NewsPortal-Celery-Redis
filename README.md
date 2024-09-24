@@ -1,2 +1,3 @@
-# SkillFactory-NewsPortal-Celery-Redis
- 
+# SkillFactory
+# Кушнер С.В. PDEVPRO-5
+# 28.5. Создание задач по расписанию
